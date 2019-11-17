@@ -32,13 +32,13 @@ public final class Main extends Application {
 	public void start(Stage primaryStage) {
 
 		LoadedAudio.BACKGROUND_MUSIC.play();
-		ImageView gameTitle = LoadedImage.imageView(LoadedImage.GAME_TITLE, 800, 150, false);
-		ImageView newGame = LoadedImage.imageView(LoadedImage.NEW_GAME, 120, 40, true);
+		ImageView gameTitle = LoadedImage.imageView(LoadedImage.GAME_TITLE, 300, 300, false);
+		ImageView newGame = LoadedImage.imageView(LoadedImage.NEW_GAME, 200, 200, true);
 		newGame.setOnMouseClicked(e -> newGame(primaryStage));
-		ImageView lastGame = LoadedImage.imageView(LoadedImage.LAST_GAME, 120, 40, true);
-		lastGame.setOnMouseClicked(e -> reload(primaryStage));
+//		ImageView lastGame = LoadedImage.imageView(LoadedImage.LAST_GAME, 120, 40, true);
+//		lastGame.setOnMouseClicked(e -> reload(primaryStage));
 
-		VBox vBox = new VBox(gameTitle, newGame, lastGame);
+		VBox vBox = new VBox(gameTitle, newGame);
 		vBox.setSpacing(10);
 		vBox.setAlignment(Pos.TOP_CENTER);
 		vBox.setPrefWidth(Config.SCREEN_WIDTH + 50);

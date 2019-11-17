@@ -90,7 +90,6 @@ public class LoadedImage {
 	static final Image MUSIC_OFF = load("/images/music_mute.png");
 	static final Image RESTART = load("/images/restart.png");
 	static final Image NEW_GAME = load("/images/newGame.png");
-	static final Image LAST_GAME = load("/images/lastGame.png");
 	static final Image GAME_TITLE = load("/images/gameTitle.png");
 	public static Image[] EXPLOSIONS = {
 			load("/images/effect_4.png"),
@@ -98,5 +97,4 @@ public class LoadedImage {
 			load("/images/effect_2.png"),
 			load("/images/effect_1.png")
 	};
-//	public static final Image SPAWN = load("/graphic/spawn.png");
 }
