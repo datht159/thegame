@@ -1,15 +1,18 @@
 package mrmathami.thegame.entity.enemy;
 
+import mrmathami.thegame.Config;
 import mrmathami.thegame.GameEntities;
 import mrmathami.thegame.GameField;
+import mrmathami.thegame.LoadedAudio;
 import mrmathami.thegame.entity.*;
+import mrmathami.thegame.entity.Explosion;
 import mrmathami.thegame.entity.tile.Road;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
 
 public abstract class AbstractEnemy extends AbstractEntity implements UpdatableEntity, EffectEntity, LivingEntity, DestroyListener {
-	private static final double SQRT_2 = Math.sqrt(2.0) / 2.0;
+	private static final double SQRT_2 = Math.sqrt(2) / 2.0;
 	private static final double[][] DELTA_DIRECTION_ARRAY = {
 			{0.0, -1.0}, {0.0, 1.0}, {-1.0, 0.0}, {1.0, 0.0},
 			{-SQRT_2, -SQRT_2}, {SQRT_2, SQRT_2}, {SQRT_2, -SQRT_2}, {-SQRT_2, SQRT_2},
@@ -75,13 +78,19 @@ public abstract class AbstractEnemy extends AbstractEntity implements UpdatableE
 
 	@Override
 	public final void onDestroy(@Nonnull GameField field) {
-		// TODO: reward
+		// TODO: reward ... Done!
+		field.credit += reward;
+		if (Config.sfx) LoadedAudio.enemyDestroy().play();
+		field.doSpawn(new Explosion(0, this));
 	}
 
 	@Override
 	public final boolean onEffect(@Nonnull GameField field, @Nonnull LivingEntity livingEntity) {
-		// TODO: harm the target
+		// TODO: harm the target ... Done!
+		livingEntity.doEffect(-health);
 		this.health = Long.MIN_VALUE;
+		if (livingEntity instanceof  AbstractEntity)
+			field.doSpawn(new Explosion(0, (AbstractEntity) livingEntity));
 		return false;
 	}
 
@@ -104,4 +113,5 @@ public abstract class AbstractEnemy extends AbstractEntity implements UpdatableE
 	public final boolean isDestroyed() {
 		return health <= 0L;
 	}
+
 }

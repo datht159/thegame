@@ -5,14 +5,23 @@ import javafx.scene.paint.Color;
 import mrmathami.thegame.Config;
 import mrmathami.thegame.GameEntities;
 import mrmathami.thegame.GameField;
+import mrmathami.thegame.entity.Explosion;
 import mrmathami.thegame.entity.GameEntity;
+import mrmathami.thegame.entity.bullet.MachineGunBullet;
 import mrmathami.thegame.entity.bullet.NormalBullet;
+import mrmathami.thegame.entity.bullet.SniperBullet;
+import mrmathami.thegame.entity.enemy.BossEnemy;
 import mrmathami.thegame.entity.enemy.NormalEnemy;
-import mrmathami.thegame.entity.tile.Mountain;
-import mrmathami.thegame.entity.tile.Road;
-import mrmathami.thegame.entity.tile.Target;
+import mrmathami.thegame.entity.enemy.SmallerEnemy;
+import mrmathami.thegame.entity.enemy.TankerEnemy;
+import mrmathami.thegame.entity.tile.*;
+import mrmathami.thegame.entity.tile.spawner.BossSpawner;
 import mrmathami.thegame.entity.tile.spawner.NormalSpawner;
+import mrmathami.thegame.entity.tile.spawner.SmallerSpawner;
+import mrmathami.thegame.entity.tile.spawner.TankerSpawner;
+import mrmathami.thegame.entity.tile.tower.MachineGunTower;
 import mrmathami.thegame.entity.tile.tower.NormalTower;
+import mrmathami.thegame.entity.tile.tower.SniperTower;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -29,21 +38,23 @@ public final class GameDrawer {
 	@Nonnull private static final List<Class<?>> ENTITY_DRAWING_ORDER = List.of(
 			Road.class,
 			Mountain.class,
+			Obstacle.class,
 			NormalTower.class,
-//			SniperTower.class,
-//			MachineGunTower.class,
+			SniperTower.class,
+			MachineGunTower.class,
 			NormalBullet.class,
-//			MachineGunBullet.class,
-//			SniperBullet.class,
+			MachineGunBullet.class,
+			SniperBullet.class,
 			NormalEnemy.class,
-//			SmallerEnemy.class,
-//			TankerEnemy.class,
-//			BossEnemy.class,
+			SmallerEnemy.class,
+			TankerEnemy.class,
+			BossEnemy.class,
 			NormalSpawner.class,
-//			SmallerSpawner.class,
-//			TankerSpawner.class,
-//			BossSpawner.class,
-			Target.class
+			SmallerSpawner.class,
+			TankerSpawner.class,
+			BossSpawner.class,
+			Target.class,
+			Explosion.class
 	);
 	/**
 	 * TODO:
@@ -54,20 +65,22 @@ public final class GameDrawer {
 			Map.entry(Road.class, new RoadDrawer()),
 			Map.entry(Mountain.class, new MountainDrawer()),
 			Map.entry(NormalTower.class, new NormalTowerDrawer()),
-//			Map.entry(SniperTower.class, new SniperTowerDrawer()),
-//			Map.entry(MachineGunTower.class, new MachineGunTowerDrawer()),
+			Map.entry(SniperTower.class, new SniperTowerDrawer()),
+			Map.entry(MachineGunTower.class, new MachineGunTowerDrawer()),
 			Map.entry(NormalBullet.class, new NormalBulletDrawer()),
-//			Map.entry(MachineGunBullet.class, new MachineGunBulletDrawer()),
-//			Map.entry(SniperBullet.class, new SniperBulletDrawer()),
+			Map.entry(MachineGunBullet.class, new MachineGunBulletDrawer()),
+			Map.entry(SniperBullet.class, new SniperBulletDrawer()),
 			Map.entry(NormalEnemy.class, new NormalEnemyDrawer()),
-//			Map.entry(SmallerEnemy.class, new SmallerEnemyDrawer()),
-//			Map.entry(TankerEnemy.class, new TankerEnemyDrawer()),
-//			Map.entry(BossEnemy.class, new BossEnemyDrawer()),
+			Map.entry(SmallerEnemy.class, new SmallerEnemyDrawer()),
+			Map.entry(TankerEnemy.class, new TankerEnemyDrawer()),
+			Map.entry(BossEnemy.class, new BossEnemyDrawer()),
 			Map.entry(NormalSpawner.class, new SpawnerDrawer()),
-//			Map.entry(SmallerSpawner.class, new SpawnerDrawer()),
-//			Map.entry(TankerSpawner.class, new SpawnerDrawer()),
-//			Map.entry(BossSpawner.class, new SpawnerDrawer()),
-			Map.entry(Target.class, new TargetDrawer())
+			Map.entry(SmallerSpawner.class, new SpawnerDrawer()),
+			Map.entry(TankerSpawner.class, new SpawnerDrawer()),
+			Map.entry(BossSpawner.class, new SpawnerDrawer()),
+			Map.entry(Obstacle.class, new ObstacleDrawer()),
+			Map.entry(Target.class, new TargetDrawer()),
+			Map.entry(Explosion.class, new ExplosionDrawer())
 	));
 
 	@Nonnull private final GraphicsContext graphicsContext;
@@ -176,11 +189,11 @@ public final class GameDrawer {
 	}
 
 	public final double screenToFieldPosX(double screenPosX) {
-		return screenPosX * fieldZoom + fieldStartPosX;
+		return screenPosX / fieldZoom + fieldStartPosX;
 	}
 
 	public final double screenToFieldPosY(double screenPosY) {
-		return screenPosY * fieldZoom + fieldStartPosY;
+		return screenPosY / fieldZoom + fieldStartPosY;
 	}
 
 	public final double fieldToScreenPosX(double fieldPosX) {

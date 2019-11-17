@@ -4,12 +4,13 @@ package mrmathami.thegame;
 import mrmathami.thegame.entity.*;
 
 import javax.annotation.Nonnull;
+import java.io.Serializable;
 import java.util.*;
 
 /**
  * Game Field. Created from GameMap for each new stage. Represent the currently playing game.
  */
-public final class GameField {
+public final class GameField implements Serializable {
 	@Nonnull private final Set<GameEntity> entities = new LinkedHashSet<>(Config._TILE_MAP_COUNT);
 	@Nonnull private final Collection<GameEntity> unmodifiableEntities = Collections.unmodifiableCollection(entities);
 	@Nonnull private final List<GameEntity> spawnEntities = new ArrayList<>(Config._TILE_MAP_COUNT);
@@ -32,6 +33,7 @@ public final class GameField {
 		this.height = gameStage.getHeight();
 		this.tickCount = 0;
 		entities.addAll(gameStage.getEntities());
+		credit = Config.START_CREDIT;
 	}
 
 	public final double getWidth() {
@@ -116,5 +118,10 @@ public final class GameField {
 			if (entity instanceof SpawnListener) ((SpawnListener) entity).onSpawn(this);
 		}
 		spawnEntities.clear();
+	}
+
+	public long credit;
+	void destroy(GameEntity entity) {
+		entities.remove(entity);
 	}
 }
