@@ -8,6 +8,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -22,6 +23,7 @@ import java.io.ObjectInputStream;
  * Main class. Entry point of the game.
  */
 public final class Main extends Application {
+//	private BorderPane root;
 	public static void main(String[] args) {
 		Application.launch(args);
 	}
@@ -38,7 +40,7 @@ public final class Main extends Application {
 
 		VBox vBox = new VBox(gameTitle, newGame, lastGame);
 		vBox.setSpacing(10);
-		vBox.setAlignment(Pos.CENTER);
+		vBox.setAlignment(Pos.TOP_CENTER);
 		vBox.setPrefWidth(Config.SCREEN_WIDTH + 50);
 		vBox.setPrefHeight(Config.SCREEN_HEIGHT);
 		vBox.setBackground(LoadedImage.BACKGROUND);
@@ -51,7 +53,7 @@ public final class Main extends Application {
 	}
 
 	private void newGame(Stage stage) {
-		renderGameUI(stage, null);
+		initUI(stage, null);
 	}
 
 	private void reload(Stage stage) {
@@ -63,26 +65,26 @@ public final class Main extends Application {
 			objectInputStream.close();
 			fileInputStream.close();
 		} catch (Exception ignore) {}
-		renderGameUI(stage, loadedField);
+		initUI(stage, loadedField);
 	}
 
-	private void renderGameUI(Stage stage, GameField field) {
+	private void initUI(Stage stage, GameField field) {
 		Canvas canvas = new Canvas(Config.SCREEN_WIDTH, Config.SCREEN_HEIGHT);
 		canvas.setFocusTraversable(true);
 		GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
 		GameController gameController = (field == null) ? new GameController(graphicsContext) : new GameController(graphicsContext, field);
 		canvas.setOnMouseClicked(gameController::mouseClickHandler);
 
-		var moneyLine = new HBox(LoadedImage.imageView(LoadedImage.$$$, 15, 30, false), gameController.getCredit());
-		moneyLine.setAlignment(Pos.CENTER_LEFT);
+		var moneyLine = new HBox(LoadedImage.imageView(LoadedImage.$$$, 20, 20, false), gameController.getCredit());
+		moneyLine.setAlignment(Pos.BOTTOM_LEFT);
 		var normalTowerLine = towerLine(LoadedImage.NORMAL_TOWER, Config.KEY_STATUS.NORMAL_TOWER, Config.NORMAL_TOWER_PRICE, gameController);
 		var sniperTowerLine = towerLine(LoadedImage.SNIPER_TOWER, Config.KEY_STATUS.SNIPER_TOWER, Config.SNIPER_TOWER_PRICE, gameController);
 		var machineGunTowerLine = towerLine(LoadedImage.MACHINE_GUN_TOWER, Config.KEY_STATUS.MACHINE_GUN_TOWER, Config.MACHINE_GUN_TOWER_PRICE, gameController);
-		var sell = LoadedImage.imageView(LoadedImage.SELL, 40, 30, true);
+		var sell = LoadedImage.imageView(LoadedImage.SELL, 40, 40, true);
 		sell.setOnMouseClicked(e -> gameController.setKey(Config.KEY_STATUS.SELL, new ImageCursor(LoadedImage.$$$)));
-		ImageView shopTitle = LoadedImage.imageView(LoadedImage.SHOP, 50, 15, false);
-		VBox shop = new VBox(moneyLine, shopTitle,normalTowerLine, sniperTowerLine, machineGunTowerLine, sell);
-		shop.setAlignment(Pos.TOP_CENTER);
+//		ImageView shopTitle = LoadedImage.imageView(LoadedImage.SHOP, 50, 15, false);
+		HBox shop = new HBox(moneyLine,normalTowerLine, sniperTowerLine, machineGunTowerLine, sell);
+		shop.setAlignment(Pos.BOTTOM_LEFT);
 		shop.setSpacing(3);
 
 		ImageView pause = LoadedImage.imageView(LoadedImage.PAUSE, 40, 40, true);
@@ -106,12 +108,6 @@ public final class Main extends Application {
 			sfx.setImage(Config.sfx ? LoadedImage.AUDIO_ON : LoadedImage.AUDIO_OFF);
 		});
 
-		ImageView autoPlay = LoadedImage.imageView(Config.autoPlay ? LoadedImage.AUTO_ON : LoadedImage.AUTO_OFF, 40, 40, true);
-		autoPlay.setOnMouseClicked(e -> {
-			Config.autoPlay = !Config.autoPlay;
-			autoPlay.setImage(Config.autoPlay ? LoadedImage.AUTO_ON : LoadedImage.AUTO_OFF);
-		});
-
 		ImageView music = LoadedImage.imageView((Config.music)? LoadedImage.MUSIC_ON : LoadedImage.MUSIC_OFF, 40, 35, true);
 		music.setOnMouseClicked(event -> {
 			Config.music = !Config.music;
@@ -126,31 +122,30 @@ public final class Main extends Application {
 			newGame(stage);
 		});
 
-		ImageView settingTitle = LoadedImage.imageView(LoadedImage.SETTING, 50, 15, false);
-
-		VBox option = new VBox(settingTitle, autoPlay, pause, sfx, music, restart);
-		option.setAlignment(Pos.CENTER);
+		HBox option = new HBox(pause, sfx, music, restart);
+		option.setAlignment(Pos.BOTTOM_LEFT);
 		option.setSpacing(5);
 
-		VBox infoBox = new VBox(shop, option);
-		infoBox.setAlignment(Pos.TOP_CENTER);
-		infoBox.setSpacing(30);
-		infoBox.setFillWidth(true);
-		HBox hBox = new HBox(canvas, infoBox);
-		hBox.setBackground(LoadedImage.BACKGROUND);
+		HBox menuOptions = new HBox(shop, option);
+		menuOptions.setAlignment(Pos.BOTTOM_CENTER);
+		menuOptions.setSpacing(10);
+		menuOptions.setBackground(LoadedImage.MENU_BACKGROUND);
+//		infoBox.setFillWidth(true);
+		VBox vBox = new VBox(canvas, menuOptions);
+		vBox.setBackground(LoadedImage.BACKGROUND);
 		gameController.start();
 		stage.setOnCloseRequest(gameController::closeRequestHandler);
-		stage.setScene(new Scene(hBox));
+		stage.setScene(new Scene(vBox));
 	}
 
-	private static VBox towerLine(Image towerImage, Config.KEY_STATUS keyStatus, long towerPrice, GameController controller){
+	private static HBox towerLine(Image towerImage, Config.KEY_STATUS keyStatus, long towerPrice, GameController controller){
 		ImageView tower = LoadedImage.imageView(towerImage, 40, 40, true);
 		tower.setOnMouseClicked(e -> controller.setKey(keyStatus, new ImageCursor(towerImage)));
 		final Text price = new Text(String.valueOf(towerPrice));
 		price.setFont(Font.font(13));
 		price.setFill(Color.YELLOWGREEN);
-		VBox vBox = new VBox(tower, price);
-		vBox.setAlignment(Pos.CENTER);
+		HBox vBox = new HBox(tower, price);
+		vBox.setAlignment(Pos.BOTTOM_CENTER);
 		return vBox;
 	}
 }

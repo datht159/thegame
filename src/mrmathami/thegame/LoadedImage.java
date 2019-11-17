@@ -9,23 +9,29 @@ import javafx.scene.paint.Color;
 
 public class LoadedImage {
 	private static Image load(String path) {
-		return new Image(LoadedImage.class.getResourceAsStream(path));
+		try{
+			return new Image(LoadedImage.class.getResourceAsStream(path));
+		}catch (Exception ex){
+			System.out.println("could not load resources file:"+path);
+		}
+		return null;
 	}
 	public static final Image NORMAL_TOWER = load("/images/normalTower.png");
+//	public static final Image MENU_BACKGROUND= load("/images/bg_menu.png");
 	public static final Image MACHINE_GUN_TOWER = load("/images/machineGunTower.png");
 	public static final Image SNIPER_TOWER = load("/images/sniperTower.png");
-	static final Image $$$ = load("/images/$.png");
+	static final Image $$$ = load("/images/point.png");
 	public static final Image NORMAL_ENEMY = load("/images/normalEnemy.png");
 	public static final Image SMALLER_ENEMY = load("/images/smallerEnemy.png");
 	public static final Image TANKER_ENEMY = load("/images/tankerEnemy.png");
 	public static final Image BOSS_ENEMY = load("/images/bossEnemy.png");
-	static final Image WIN = load("/images/winMes.png");
-	static final Image LOSE = load("/images/bglose.jpg");
-	//public static final Image BACKGROUND = load("/graphic/bg.jfif");
+	static final Image WIN = load("/images/game_win.png");
+	static final Image LOSE = load("/images/game_over.png");
 	private static BackgroundImage loadBGI(String path) {
 		return new BackgroundImage(load(path), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
 	}
-	static final Background BACKGROUND = new Background(loadBGI("/images/bg.jfif"));
+	static final Background BACKGROUND = new Background(loadBGI("/images/bg.png"));
+	static final Background MENU_BACKGROUND = new Background(loadBGI("/images/bg_menu.png"));
 	public static final Image TARGET = load("/images/target.png");
 
 //	public static final Image ROAD = load("/graphic/road.png");
@@ -79,13 +85,9 @@ public class LoadedImage {
 	static final Image AUDIO_OFF = load("/images/audio_mute.png");
 	static final Image PAUSE = load("/images/pause.png");
 	static final Image CONTINUE = load("/images/continue.png");
-	static final Image AUTO_ON = load("/images/icons8-bot-96.png");
-	static final Image AUTO_OFF = load("/images/bot_off.png");
-	static final Image SELL = load("/images/icons8-money-128.png");
+	static final Image SELL = load("/images/money.png");
 	static final Image MUSIC_ON = load("/images/music_on.png");
 	static final Image MUSIC_OFF = load("/images/music_mute.png");
-	static final Image SHOP = load("/images/shop-icon.png");
-	static final Image SETTING = load("/images/setting.png");
 	static final Image RESTART = load("/images/restart.png");
 	static final Image NEW_GAME = load("/images/newGame.png");
 	static final Image LAST_GAME = load("/images/lastGame.png");
