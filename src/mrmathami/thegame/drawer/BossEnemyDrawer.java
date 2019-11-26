@@ -12,13 +12,6 @@ import javax.annotation.Nonnull;
 public final class BossEnemyDrawer implements EntityDrawer {
 	@Override
 	public void draw(long tickCount, @Nonnull GraphicsContext graphicsContext, @Nonnull GameEntity entity, double screenPosX, double screenPosY, double screenWidth, double screenHeight, double zoom) {
-//		graphicsContext.setFill(Color.DARKVIOLET);
-//		graphicsContext.fillRoundRect(screenPosX, screenPosY, screenWidth, screenHeight, 4, 4);
-//		if (entity instanceof BossEnemy) {
-//			BossEnemy enemy = ((BossEnemy) entity);
-//			graphicsContext.setFill(Color.RED);
-//			graphicsContext.fillText(String.format("%d", enemy.getHealth()), screenPosX, screenPosY, 20);
-//		}
 		if (entity instanceof BossEnemy) {
 			BossEnemy enemy = ((BossEnemy) entity);
 			graphicsContext.setFill(Color.BLUE);
